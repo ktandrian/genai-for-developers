@@ -125,7 +125,7 @@ def validate_and_correct_json(json_text):
 
 @click.command(name='code')
 @click.option('-c', '--context', required=False, type=str, default="")
-@click.option('-o', '--output', type=click.Choice(['markdown', 'json', 'table']), default='markdown', help="The desired output format, markdown is the defualt.")
+@click.option('-o', '--output', type=click.Choice(['markdown', 'json', 'table']), default='markdown', help="The desired output format, markdown is the default.")
 def code(context, output):
     """
     This function performs a code review using the Generative Model API.
