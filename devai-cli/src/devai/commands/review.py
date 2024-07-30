@@ -873,23 +873,24 @@ Only write explanation for new code changes and not for existing code in the FIN
 
 @click.command(name="commit")
 @click.option('-h', "--hash", required=True, type=str, default="")
-def commit(hash):
+@click.option('-b', "--base", required=False, type=str)
+def commit(hash, base):
     """
-    This function performs a review on what has changed in a commit based on SHA.
+    This function performs a review on what has changed in commits based on SHA.
     """
-    refer_commit_parent = True
-    files = list_files(hash, hash, refer_commit_parent)
-    changes = list_changes(hash, hash, refer_commit_parent)
+    base = base or hash
+    refer_commit_parent = False if base != hash else True
+    files = list_files(base, hash, refer_commit_parent)
+    changes = list_changes(base, hash, refer_commit_parent)
     commit_messages = list_commit_messages(hash, hash, refer_commit_parent)
     source_code = source.format(changes, commit_messages, format_files_as_string(files))
     code_chat_model = GenerativeModel(model_name)
     with telemetry.tool_context_manager(USER_AGENT):
-        code_chat = code_chat_model.start_chat()
+        code_chat = code_chat_model.start_chat(response_validation=False)
         code_chat.send_message(report_qry)
         response = code_chat.send_message(source_code)
 
     click.echo(f"{response.text}")
-    
 
 @click.group()
 def review():

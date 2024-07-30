@@ -1,0 +1,53 @@
+# AI enabled code reviews using devai
+# Requires GCP service account stored in GOOGLE_API_CREDENTIALS secret
+
+name: PR Summary
+run-name: Summarize ${{ github.actor }}'s code changes  🚀
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  review:
+    name: Code review with DevAI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.4"
+          cache: pip
+      - run: cd ${{ github.workspace }}/devai-cli
+      - run: pip install virtualenv
+      - run: virtualenv venv
+      - run: source venv/bin/activate
+      - run: pip install -r ${{ github.workspace }}/devai-cli/src/requirements.txt
+      - run: pip install --editable ${{ github.workspace }}/devai-cli/src
+
+      - name: Authorize with GCP
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: "${{ secrets.GOOGLE_API_CREDENTIALS }}"
+          project_id: "${{ secrets.PROJECT_ID }}"
+
+      - name: Code Review
+        id: rev
+        run: |
+          {
+            echo "comment<<EOF"
+            devai review commit -h ${{ github.sha }} -b ${{ github.event.pull_request.base.sha }}
+            echo EOF
+          } >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Create PR comment
+        uses: peter-evans/create-or-update-comment@v4
+        if: ${{ steps.rev.outputs.comment }}
+        id: comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.rev.outputs.comment }}
