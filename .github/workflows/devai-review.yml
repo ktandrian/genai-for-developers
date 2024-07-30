@@ -1,13 +1,17 @@
 # AI enabled code reviews using devai
-# - Requires GCP service account stored in GOOGLE_API_CREDENTIALS secret
-name: GenAI For Developers
-run-name: Reviewing ${{ github.actor }}'s code changes  🚀
-on: [workflow_dispatch]
+# Requires GCP service account stored in GOOGLE_API_CREDENTIALS secret
+
+name: App Code Review
+run-name: Review Bank of Anthos App Code - ${{ github.actor }}  🚀
+on: workflow_dispatch
+
 env:
-  LOCATION: us-central1
+  LOCATION: asia-southeast1
   PROJECT_ID: '${{ secrets.PROJECT_ID }}'
+
 jobs:
-  DevAI-Reviews:
+  review:
+    name: Code review with DevAI
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code

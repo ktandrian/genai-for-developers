@@ -1,7 +1,7 @@
 # AI enabled code reviews using devai
 # Requires GCP service account stored in GOOGLE_API_CREDENTIALS secret
 
-name: Review commit
+name: Commit Review
 run-name: Reviewing ${{ github.actor }}'s code changes  🚀
 on:
   push:
