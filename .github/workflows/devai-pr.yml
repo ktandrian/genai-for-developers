@@ -49,4 +49,5 @@ jobs:
         if: ${{ steps.rev.outputs.comment }}
         id: comment
         with:
+          issue-number: ${{ github.event.pull_request.number }}
           body: ${{ steps.rev.outputs.comment }}
