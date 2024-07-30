@@ -16,6 +16,7 @@ import click
 
 from devai.commands import cmd,  prompt, review, release, document
 from devai.commands.rag import rag
+from devai.commands.rag_bq import rag_bq
 
 
 # Uncomment after configuring JIRA and GitLab env variables - see README.md for details
@@ -42,6 +43,7 @@ devai.add_command(review.review)
 devai.add_command(release.release)
 devai.add_command(document.document)
 devai.add_command(rag.rag)
+devai.add_command(rag_bq.rag_bq, name='rag-bq')
 
 # devai.add_command(jira.jira)
 # devai.add_command(gitlab.gitlab)
