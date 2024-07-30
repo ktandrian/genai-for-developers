@@ -50,7 +50,3 @@ jobs:
         id: comment
         with:
           body: ${{ steps.rev.outputs.comment }}
-
-      - name: Check outputs
-        run: |
-          echo "Comment ID - ${{ steps.comment.outputs.comment-id }}"
