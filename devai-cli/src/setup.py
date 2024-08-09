@@ -21,7 +21,14 @@ setup(
     py_modules=['devai'],
     install_requires=[
         'click==8.1.7',
-        'google-cloud-aiplatform'
+        'GitPython==3.1.43',
+        'google-cloud-aiplatform==1.48.0',
+        'google-cloud-secret-manager==2.20.0',
+        'json-repair==0.23.1',
+        'langchain-community==0.2.1',
+        'langchain-google-community==1.0.6',
+        'langchain-google-vertexai==1.0.4',
+        'rich==13.7.1'
     ],
     entry_points={
         'console_scripts': [
