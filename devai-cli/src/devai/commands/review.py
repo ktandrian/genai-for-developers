@@ -869,6 +869,7 @@ Using this pattern, analyze provided GIT DIFFS, GIT COMMITS and FINAL CODE secti
 and write explanation for internal company change management about what has changed in several sentences with bullet points.
 Use professional tone for explanation.
 Only write explanation for new code changes and not for existing code in the FINAL CODE section.
+Set the title to "## Code Changes Summary by Gemini ✨"
 '''
 
 @click.command(name="commit")
