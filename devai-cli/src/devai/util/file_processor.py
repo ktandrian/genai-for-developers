@@ -108,11 +108,10 @@ def list_changes(start_sha, end_sha, refer_commit_parent=False):
     return output
 
 def list_commit_messages(start_sha, end_sha, refer_commit_parent=False):
-    
-    command = ["git", "log", "--pretty=format:%s", "--name-only", start_sha, end_sha]
     if refer_commit_parent:
-        command = ["git", "log", "--pretty=format:%s", "--name-only", f"{start_sha}^..{end_sha}"]
-
+        start_sha = f"{start_sha}^"
+    
+    command = ["git", "log", "--pretty=format:%s", "--name-only", f"{start_sha}..{end_sha}"]
     output = subprocess.check_output(command, text=True)
     return output
 

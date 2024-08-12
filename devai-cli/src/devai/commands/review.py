@@ -883,7 +883,7 @@ def commit(hash, base):
     refer_commit_parent = False if base != hash else True
     files = list_files(base, hash, refer_commit_parent)
     changes = list_changes(base, hash, refer_commit_parent)
-    commit_messages = list_commit_messages(hash, hash, refer_commit_parent)
+    commit_messages = list_commit_messages(base, hash, refer_commit_parent)
     source_code = source.format(changes, commit_messages, format_files_as_string(files))
     code_chat_model = GenerativeModel(model_name)
     with telemetry.tool_context_manager(USER_AGENT):
