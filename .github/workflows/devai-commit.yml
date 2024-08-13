@@ -1,5 +1,5 @@
 # AI enabled code reviews using devai
-# Requires GCP service account stored in GOOGLE_API_CREDENTIALS secret
+# Requires GCP Workload Identity Provider stored in WIF_PROVIDER secret
 
 name: Commit Review
 run-name: Reviewing ${{ github.actor }}'s code changes  🚀
@@ -11,6 +11,9 @@ jobs:
   review:
     name: Code review with DevAI
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -29,10 +32,10 @@ jobs:
       - run: pip install --editable ${{ github.workspace }}/devai-cli/src
 
       - name: Authorize with GCP
-        uses: "google-github-actions/auth@v2"
+        uses: google-github-actions/auth@v2
         with:
-          credentials_json: "${{ secrets.GOOGLE_API_CREDENTIALS }}"
           project_id: "${{ secrets.PROJECT_ID }}"
+          workload_identity_provider: "${{ secrets.WIF_PROVIDER }}"
 
       - name: Code Review
         id: rev
