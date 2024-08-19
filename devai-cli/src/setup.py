@@ -27,7 +27,7 @@ setup(
         'json-repair==0.23.1',
         'langchain-community==0.2.12',
         'langchain-google-community==1.0.7',
-        'langchain-google-vertexai==1.0.4',
+        'langchain-google-vertexai==1.0.8',
         'rich==13.7.1'
     ],
     entry_points={
