@@ -23,7 +23,7 @@ setup(
         'click==8.1.7',
         'GitPython==3.1.43',
         'google-cloud-aiplatform==1.62.0',
-        'google-cloud-secret-manager==2.20.0',
+        'google-cloud-secret-manager==2.20.2',
         'json-repair==0.23.1',
         'langchain-community==0.2.1',
         'langchain-google-community==1.0.6',
