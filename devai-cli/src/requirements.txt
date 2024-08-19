@@ -3,7 +3,7 @@ google-cloud-aiplatform==1.62.0
 jira==3.6.0
 python-gitlab==4.4.0
 langchain==0.2.14
-langchain-community==0.2.1
+langchain-community==0.2.12
 langchain-google-community==1.0.6
 langchain-google-vertexai==1.0.4
 atlassian-python-api==3.41.10
