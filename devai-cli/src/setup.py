@@ -26,7 +26,7 @@ setup(
         'google-cloud-secret-manager==2.20.2',
         'json-repair==0.23.1',
         'langchain-community==0.2.12',
-        'langchain-google-community==1.0.6',
+        'langchain-google-community==1.0.7',
         'langchain-google-vertexai==1.0.4',
         'rich==13.7.1'
     ],
