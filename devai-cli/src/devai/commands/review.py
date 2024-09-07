@@ -38,9 +38,7 @@ from rich.table import Table
 # from devai.commands.gitlab import create_gitlab_issue_comment
 from devai.commands.review_commit.commit import commit
 
-USER_AGENT = 'cloud-solutions/genai-for-developers-v1.0'
-
-model_name="gemini-1.5-pro"
+from .constants import USER_AGENT, MODEL_NAME
 
 
 def ensure_env_variable(var_name):
@@ -296,7 +294,7 @@ Provide an overview or overall impression entry for the code as the first entry.
     # Load files as text into the source variable
     source = source.format(format_files_as_string(context))
 
-    code_chat_model = GenerativeModel(model_name)
+    code_chat_model = GenerativeModel(MODEL_NAME)
     with telemetry.tool_context_manager(USER_AGENT):
         code_chat = code_chat_model.start_chat(response_validation=False)
         code_chat.send_message(qry)
@@ -435,7 +433,7 @@ def performance(context):
     # Load files as text into source variable
     source=source.format(format_files_as_string(context))
 
-    code_chat_model = GenerativeModel(model_name)
+    code_chat_model = GenerativeModel(MODEL_NAME)
     with telemetry.tool_context_manager(USER_AGENT):
         code_chat = code_chat_model.start_chat(response_validation=False)
         code_chat.send_message(qry)
@@ -539,7 +537,7 @@ def security(context):
     # Load files as text into source variable
     source=source.format(format_files_as_string(context))
     
-    code_chat_model = GenerativeModel(model_name)
+    code_chat_model = GenerativeModel(MODEL_NAME)
     with telemetry.tool_context_manager(USER_AGENT):
         code_chat = code_chat_model.start_chat(response_validation=False)
         code_chat.send_message(qry)
@@ -628,7 +626,7 @@ def testcoverage(context):
     # Load files as text into source variable
     source=source.format(format_files_as_string(context))
     
-    code_chat_model = GenerativeModel(model_name)
+    code_chat_model = GenerativeModel(MODEL_NAME)
     with telemetry.tool_context_manager(USER_AGENT):
         code_chat = code_chat_model.start_chat(response_validation=False)
         code_chat.send_message(qry)
@@ -684,7 +682,7 @@ def blockers(context):
     # Load files as text into source variable
     source=source.format(format_files_as_string(context))
     
-    code_chat_model = GenerativeModel(model_name)
+    code_chat_model = GenerativeModel(MODEL_NAME)
     with telemetry.tool_context_manager(USER_AGENT):
         code_chat = code_chat_model.start_chat(response_validation=False)
         code_chat.send_message(qry)
@@ -756,7 +754,7 @@ def impact(current, target):
     current_source=current_source.format(format_files_as_string(current))
     target_source=target_source.format(format_files_as_string(target))
     
-    code_chat_model = GenerativeModel(model_name)
+    code_chat_model = GenerativeModel(MODEL_NAME)
     with telemetry.tool_context_manager(USER_AGENT):
         code_chat = code_chat_model.start_chat(response_validation=False)
         code_chat.send_message(qry)
@@ -800,7 +798,7 @@ def imgdiff(current, target):
     contents = [qry, after_state, load_image_from_path(current),
                 before_state, load_image_from_path(target)]
 
-    code_chat_model = GenerativeModel(model_name)
+    code_chat_model = GenerativeModel(MODEL_NAME)
     with telemetry.tool_context_manager(USER_AGENT):
         responses = code_chat_model.generate_content(contents, stream=True)
 
@@ -829,7 +827,7 @@ def image(file, prompt):
     
     contents = [qry, load_image_from_path(file)]
 
-    code_chat_model = GenerativeModel(model_name)
+    code_chat_model = GenerativeModel(MODEL_NAME)
     with telemetry.tool_context_manager(USER_AGENT):
         responses = code_chat_model.generate_content(contents, stream=True)
 
