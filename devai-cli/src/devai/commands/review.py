@@ -849,4 +849,6 @@ review.add_command(blockers)
 review.add_command(impact)
 review.add_command(imgdiff)
 review.add_command(image)
+
+# ktandrian
 review.add_command(commit)

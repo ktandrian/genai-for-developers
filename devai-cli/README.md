@@ -7,7 +7,6 @@ This example demonstrates ways to integrate LLM models into a custom command lin
 This directory contains a sample cli implementation called devai, as well as a tutorial describing how to use it.
 
 ## Install and use
-
 The cli is provided as a package on PyPi for demonstration purposes only. It is not intended for production use as is. To install the package for use locally or in CICD systems run the following command
 
 Set environment variables in your local environment or in CICD pipeline environment variables.
@@ -28,9 +27,9 @@ Once installed you can use the CLI with its short name `devai` as follows
 ```sh
 devai echo
 devai echo
-devai sub
+devai sub 
 
-devai prompt with_context
+devai prompt with_context  
 devai prompt with_msg
 devai prompt with_msg_streaming
 
@@ -51,14 +50,14 @@ devai review impact \
 
 devai review imgdiff \
   -c /ui/main-page-after-upgrade.png \
-  -t /ui/main-page-before-upgrade.png
+  -t /ui/main-page-before-upgrade.png  
 
 devai review image \
   -f /tmp/diagram.png \
   -p "Review and summarize this diagram"
 
 devai release notes_user_tag -t "v5.0.0"
-devai release notes_user -s "main" -e "feature-branch-name"
+devai release notes_user -s "main" -e "feature-branch-name" 
 
 devai rag load -r "https://github.com/GoogleCloudPlatform/genai-for-developers"
 devai rag query -q "What does devai do"
@@ -73,7 +72,7 @@ devai document update-releasenotes -f ../sample-app/releasenotes.md -c ../sample
 
 - Enable Gemini chat, Vertex AI, Artifact Registry, Cloud Build and Secrets Manager APIs.
 - Creates an Artifact registry
-
+  
 ```sh
 terraform -chdir=../terraform/devai-cli init
 terraform -chdir=../terraform/devai-cli apply -var project_id=${PROJECT_ID} -var location=${LOCATION}
@@ -160,13 +159,13 @@ pipeline {
                     ./venv/bin/pip install -r src/requirements.txt
                     ./venv/bin/pip install --editable ./src
                     '''
-
+                    
                     withCredentials([
                             file(credentialsId: 'GOOGLE_APPLICATION_CREDENTIALS', variable: 'GOOGLE_APPLICATION_CREDENTIALS'),
                             string(credentialsId: 'PROJECT_ID', variable: 'PROJECT_ID'),
                             string(credentialsId: 'LOCATION', variable: 'LOCATION'),
-
-                        ]) {
+                            
+                        ]) {    
                             sh '''
                             ./venv/bin/devai review code -c /bitnami/jenkins/home/workspace/genai-cicd_genai-for-developers/sample-app/src/main/java/anthos/samples/bankofanthos/balancereader
                             ./venv/bin/devai review performance -c /bitnami/jenkins/home/workspace/genai-cicd_genai-for-developers/sample-app/src/main/java/anthos/samples/bankofanthos/balancereader
@@ -177,7 +176,7 @@ pipeline {
             }
         }
     }
-}
+}         
 ```
 
 ### BitBucket Pipeline example
@@ -200,7 +199,7 @@ pipelines:
             - devai review code -c ./sample-app/src/main/java/anthos/samples/bankofanthos/balancereader
             - devai review performance -c ./sample-app/src/main/java/anthos/samples/bankofanthos/balancereader
             - devai review security -c ./sample-app/src/main/java/anthos/samples/bankofanthos/balancereader
-
+  
 ```
 
 ### CircleCI Pipeline example
@@ -220,7 +219,7 @@ jobs:
             command: |
               .
               .
-              devai review code -c ./sample-app/src/main/java/anthos/samples/bankofanthos/balancereader
+              devai review code -c ./sample-app/src/main/java/anthos/samples/bankofanthos/balancereader            
 ```
 
 ## Developers Guide
@@ -246,9 +245,9 @@ cd src
 
 ```sh
 python -m devai echo
-python -m devai sub
+python -m devai sub 
 
-python -m devai prompt with_context
+python -m devai prompt with_context  
 python -m devai prompt with_msg
 python -m devai prompt with_msg_streaming
 
@@ -265,7 +264,7 @@ python -m devai review impact \
   --target ~/github/repo/service-v2.0.0/modules/login
 
 python -m devai release notes_user_tag -t "v5.0.0"
-python -m devai release notes_user -s "main" -e "feature-branch-name"
+python -m devai release notes_user -s "main" -e "feature-branch-name" 
 
 
 python -m devai rag load -r "https://github.com/GoogleCloudPlatform/genai-for-developers"
@@ -300,7 +299,7 @@ gcloud builds submit . --config=build/cloudbuild-local.yaml \
 To test the CLI as it would be used in a typical pipeline, run the following command.
 
 ```sh
-gcloud builds submit . --config=build/cloudbuild-pipeline-test.yaml
+gcloud builds submit . --config=build/cloudbuild-pipeline-test.yaml 
 
 ```
 
@@ -337,7 +336,6 @@ deactivate
 ### Publish to PyPi
 
 To publish manually
-
 - Update version number in setup.py
   - Follow semantic versioning
   - versioned in order as follows (`.devN, aN, bN, rcN, <no suffix>, .postN`)
@@ -363,7 +361,6 @@ devai
 ```
 
 ### LangSmith LLM tracing configuration
-
 Create an account and generate API key.
 
 https://docs.smith.langchain.com/setup
@@ -395,9 +392,7 @@ export JIRA_USERNAME = "email that you used to register with JIRA"
 export JIRA_INSTANCE_URL = "https://YOUR-PROJECT.atlassian.net"
 export JIRA_PROJECT_KEY = "JIRA project key"
 ```
-
 Un-comment imports and function calls to use JIRA commands
-
 - cli.py
 - review.py
 
@@ -426,7 +421,7 @@ https://gitlab.com/YOUR-USERID/YOUR-PROJECT/-/settings/access_tokens
 Set environment variables required for GitLab integration.
 
 ```sh
-read -s GITLAB_PERSONAL_ACCESS_TOKEN
+read -s GITLAB_PERSONAL_ACCESS_TOKEN 
 export GITLAB_PERSONAL_ACCESS_TOKEN
 
 export GITLAB_URL="https://gitlab.com"
@@ -436,7 +431,6 @@ export GITLAB_BASE_BRANCH="main"
 ```
 
 Un-comment imports and function calls to use GitLab commands
-
 - cli.py
 - review.py
 
@@ -451,13 +445,14 @@ devai gitlab create-pr -c "Details with file changes, docs, etc"
 # Will create a new GitLab issue with provided details as is
 devai gitlab fix-issue -c 4
 
-# Will add a comment to GitLab issue
+# Will add a comment to GitLab issue 
 # issue name defaults to 'CICD AI Insights' for demonstration
 devai gitlab create-comment -c "new comment content goes here"
 
 # Will add a comment to GitLab issue with name 'CICD AI Insights'
 devai gitlab create-comment -i "CICD AI Insights" -c "new comment content goes here"
 ```
+
 
 ## Review code for blockers
 
@@ -468,9 +463,8 @@ devai review blockers -c ../sample-app/pom.xml
 ```
 
 Output:
-
 ```sh
-Response from Model:
+Response from Model: 
 {
   "onboarding_status": "BLOCKED",
   "blockers": ["IBM MQ"]
@@ -489,7 +483,7 @@ The provided `pom.xml` file includes the following dependency, which indicates t
 </dependency>
 
 
-As "IBM MQ" is listed as a blocker, the onboarding status is marked as "BLOCKED".
+As "IBM MQ" is listed as a blocker, the onboarding status is marked as "BLOCKED". 
 ```
 
 ## Review docs
@@ -499,11 +493,10 @@ cd devai-cli
 
 devai review blockers -c ../sample-app/setup.md
 ```
-
 Output
 
 ```
-Response from Model:
+Response from Model: 
 {
   "onboarding_status": "BLOCKED",
   "blockers": ["IBM MQ"]
@@ -515,10 +508,11 @@ Response from Model:
 The provided code snippet explicitly references "IBM MQ" in multiple instances, indicating a direct dependency on this technology.  Here's why the code triggers the blocker:
 
 * **Maven Dependencies:** The code includes Maven dependency declarations for `com.ibm.mq.allclient` and `wmq.jmsra`, which are libraries specifically associated with IBM MQ.
-* **File Content:** The content of the `setup.md` file discusses Java application development using a Maven repository in the context of IBM MQ, further confirming the reliance on this technology.
+* **File Content:** The content of the `setup.md` file discusses Java application development using a Maven repository in the context of IBM MQ, further confirming the reliance on this technology. 
 ```
 
 ## Perform impact analysis between two versions of the codebase
+
 
 ```sh
 devai review impact \
