@@ -8,6 +8,7 @@ on: workflow_dispatch
 env:
   LOCATION: asia-southeast1
   PROJECT_ID: '${{ secrets.PROJECT_ID }}'
+  JIRA_CLOUD: true
 
 jobs:
   review:
