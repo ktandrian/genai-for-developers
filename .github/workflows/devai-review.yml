@@ -1,14 +1,18 @@
 # AI enabled code reviews using devai
 # Requires GCP service account stored in GOOGLE_API_CREDENTIALS secret
-
 name: App Code Review
 run-name: Review Bank of Anthos App Code - ${{ github.actor }}  🚀
-on: workflow_dispatch
-
+on: [workflow_dispatch]
 env:
   LOCATION: asia-southeast1
   PROJECT_ID: '${{ secrets.PROJECT_ID }}'
-
+  JIRA_CLOUD: true
+ # Following environment variables need to be configured if GitHub integration/commands
+ # to automatically open pull requests are enabled 
+ # see docs/tutorials/setup-github.md for more details
+  GITHUB_APP_ID: '${{ secrets.GH_APP_ID }}'
+  GITHUB_REPOSITORY: '${{ secrets.GH_REPOSITORY }}'
+  GITHUB_APP_PRIVATE_KEY: '${{ secrets.GH_APP_PRIVATE_KEY }}'
 jobs:
   review:
     name: Code review with DevAI
@@ -35,6 +39,11 @@ jobs:
         with:
           credentials_json: '${{ secrets.GOOGLE_API_CREDENTIALS }}'
           project_id: '${{ secrets.PROJECT_ID }}'
+      # - name: Docs update with PR
+      #   run: echo '## Docs Update Results 🚀' >> $GITHUB_STEP_SUMMARY
+      # - run: echo "$(devai document readme -c ${{ github.workspace }}/sample-app/src -f 'sample-app/README.md' -b 'feature/docs-update')" >> $GITHUB_STEP_SUMMARY
+      #   shell: bash
+
       - name: Test Coverage Review
         run: echo '## Test Coverage Review Results 🚀' >> $GITHUB_STEP_SUMMARY
       - run: echo "$(devai review testcoverage -c ${{ github.workspace }}/sample-app/src)" >> $GITHUB_STEP_SUMMARY
@@ -43,6 +52,11 @@ jobs:
       - name: Code Review
         run: echo '## Code Review Results 🚀' >> $GITHUB_STEP_SUMMARY
       - run: echo "$(devai review code -c ${{ github.workspace }}/sample-app/src/main/java/anthos/samples/bankofanthos/balancereader)" >> $GITHUB_STEP_SUMMARY
+        shell: bash
+
+      - name: Compliance Review
+        run: echo '## Compliance Review Results 🚀' >> $GITHUB_STEP_SUMMARY
+      - run: echo "$(devai review compliance -c ${{ github.workspace }}/sample-app/k8s --config ${{ github.workspace }}/devai-cli/gemini/styleguide.md)" >> $GITHUB_STEP_SUMMARY
         shell: bash
 
       - name: Performance Review

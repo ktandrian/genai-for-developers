@@ -27,8 +27,6 @@ before_script:
 build-job:
   stage: build
   script:
-    - echo "Hello, $GITLAB_USER_LOGIN!"
-    - echo $(pwd)
     - export PROJECT_ID=$(echo $PROJECT_ID)
     - export LOCATION=$(echo $LOCATION)
 
@@ -40,6 +38,7 @@ build-job:
     - export JIRA_USERNAME=$(echo $JIRA_USERNAME)
     - export JIRA_INSTANCE_URL=$(echo $JIRA_INSTANCE_URL)
     - export JIRA_PROJECT_KEY=$(echo $JIRA_PROJECT_KEY)
+    - export JIRA_CLOUD=true
 
     - export GITLAB_PERSONAL_ACCESS_TOKEN=$(echo $GITLAB_PERSONAL_ACCESS_TOKEN)
     - export GITLAB_URL=$(echo $GITLAB_URL)
@@ -52,7 +51,8 @@ build-job:
     - export GOOGLE_APPLICATION_CREDENTIALS="service-account-key.json"
 
     - devai review testcoverage -c ./sample-app/src
-    - devai review blockers -c ./sample-app/pom.xml
     - devai review code -c ./sample-app/src/main/java/anthos/samples/bankofanthos/balancereader
+    - devai review compliance --context ./sample-app/k8s --config ./devai-cli/gemini/styleguide.md
     - devai review performance -c ./sample-app/src/main/java/anthos/samples/bankofanthos/balancereader
     - devai review security -c ./sample-app/src/main/java/anthos/samples/bankofanthos/balancereader
+    - devai review blockers -c ./sample-app/pom.xml

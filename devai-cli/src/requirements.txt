@@ -1,6 +1,6 @@
 click==8.1.7
 google-cloud-aiplatform==1.62.0
-jira==3.6.0
+jira==3.8.0
 python-gitlab==4.4.0
 langchain==0.2.14
 langchain-community==0.2.12
@@ -17,3 +17,6 @@ google-crc32c==1.5.0
 
 rich==13.7.1
 json-repair==0.23.1
+PyGithub==2.5.0
+
+pytest==8.3.5

@@ -18,6 +18,7 @@ from devai.util.file_processor import format_files_as_string
 from vertexai.generative_models import (
     GenerativeModel,
     Image,
+    Part
 )
 from google.cloud.aiplatform import telemetry
 import os
@@ -375,7 +376,6 @@ def performance(context):
     qry = get_prompt('review_query')
 
     if qry is None:
-        print("No review query found")
         qry='''
             ### Instruction ###
             You are a seasoned application performance tuning expert with deep knowledge of the nuances of various programming languages. Your task is to meticulously review the provided code snippet (please specify the language), focusing on identifying performance pitfalls and optimization opportunities. Tailor your analysis to the specific programming language used.
@@ -779,11 +779,11 @@ def imgdiff(current, target):
     """
 
     before_state='''
-    BEFORE UPGRADE STATE: 
+    IMAGE 1: 
 
     '''
     after_state='''
-    AFTER UPGRADE STATE:
+    IMAGE 2:
 
     '''
     qry = get_prompt('review_query')
@@ -791,8 +791,9 @@ def imgdiff(current, target):
     if qry is None:
         qry='''
         INSTRUCTIONS:
-        Analyze images of the Web page and write the report about what UI elements are missing between the two images.
-        Explain how you reached this decision.
+        Meticulously examine the two provided images. Generate a comprehensive report detailing the specific 
+        elements absent from each image in comparison to the other.  Clearly articulate the reasoning and 
+        methodology employed to arrive at your conclusions.
         '''
     
     contents = [qry, after_state, load_image_from_path(current),
@@ -834,6 +835,89 @@ def image(file, prompt):
     for response in responses:
         print(response.text, end="")
 
+@click.command(name='video')
+@click.option('-f', '--file', required=True, type=str, default="")
+@click.option('-p', '--prompt', required=True, type=str, default="")
+def video(file, prompt):
+    """
+    This function performs a video analysis using the Generative Model API.
+
+    Args:
+        file (str): path to video.
+        prompt (str): question about video.
+    """
+
+    qry = get_prompt('review_query')
+
+    if qry is None:
+        qry=f'''
+        INSTRUCTIONS:
+        {prompt}
+        '''
+
+    with open(file, "rb") as f:
+        video_data = f.read()
+
+    video = Part.from_data(
+        data=video_data,
+        mime_type="video/mp4",
+    )
+
+    contents = [qry, video]
+
+    code_chat_model = GenerativeModel(MODEL_NAME)
+    with telemetry.tool_context_manager(USER_AGENT):
+        responses = code_chat_model.generate_content(contents, stream=True)
+
+    for response in responses:
+        print(response.text, end="")
+
+@click.command(name='compliance')
+@click.option('-c', '--context', required=False, type=str, default="")
+@click.option('-cfg', '--config', required=False, type=str, default=".gemini")
+def compliance(context, config):
+    """
+    This function performs a compliance review using the Generative Model API.
+
+    Args:
+        context (str): The code to be reviewed.
+        output (str): The desired output format (markdown, json, or table).
+    """
+    source = '''
+            ### Context (code) ###
+            {}
+
+            '''
+    standards = '''
+            ### Best Practices ###
+            {}
+
+            '''
+    qry = get_prompt('review_query') or f'''
+            ### Instruction ###
+            You are an expert kubernetes engineer and architect with over 20 years of experience, specializing in the language of the provided code snippet and adhering to clean code principles.
+            You are meticulous, detail-oriented, and possess a deep understanding of software design and best practices.
+
+            ### Output Format ###
+            Very brief explanation of findings with focus on sample configuration that addresses the issue.
+
+            Your task is to perform a comprehensive compliance review of the provided code snippet.
+            Evaluate the code with a focus on the following key areas:
+            
+            '''
+    # Load files as text into the source variable
+    source = source.format(format_files_as_string(context))
+    best_practices = standards.format(format_files_as_string(config))
+
+    code_chat_model = GenerativeModel(MODEL_NAME)
+    with telemetry.tool_context_manager(USER_AGENT):
+        code_chat = code_chat_model.start_chat(response_validation=False)
+        code_chat.send_message(qry)
+        code_chat.send_message(best_practices)
+        response = code_chat.send_message(source)
+
+    click.echo(response.text) 
+
 @click.group()
 def review():
     """
@@ -849,6 +933,7 @@ review.add_command(blockers)
 review.add_command(impact)
 review.add_command(imgdiff)
 review.add_command(image)
-
+review.add_command(video)
+review.add_command(compliance)
 # ktandrian
 review.add_command(commit)
